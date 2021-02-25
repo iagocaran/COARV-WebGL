@@ -23,6 +23,7 @@ module.exports = {
     },
     resolve: {
         extensions: [ '.ts', '.js' ],
+        alias: { '@' : path.resolve(__dirname, 'src/assets') },
     },
     module: {
         rules: [
@@ -34,6 +35,12 @@ module.exports = {
                 test: /\.css/,
                 use: ["style-loader", "css-loader"],
                 exclude: /node_modules/,
+            }, {
+                test: /\.(png|svg|jpg|jpeg|gif)$/i,
+                loader: 'file-loader',
+                options: {
+                    name: 'images/[name].[ext]'
+                }
             }
         ]
     }
