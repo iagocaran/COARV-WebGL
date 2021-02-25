@@ -5,9 +5,14 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = {
     entry: './src/index.ts',
     mode: 'development',
+    devServer: {
+      contentBase: './dist',
+      hot: true,
+    },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Babylon project',
+            inject: false,
             template: 'src/index.html'
         }),
         new CleanWebpackPlugin(),
