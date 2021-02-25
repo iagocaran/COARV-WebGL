@@ -1,7 +1,5 @@
-import { Scene } from "babylonjs";
+import { FreeCamera, Scene, Vector3 } from "@babylonjs/core";
 import { Game } from "./Game";
-import { FreeCamera } from "babylonjs/Cameras/freeCamera";
-import { Vector3 } from "babylonjs/Maths/math.vector";
 
 
 export class Player {

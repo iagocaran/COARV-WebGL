@@ -1,8 +1,5 @@
+import { HemisphericLight, Mesh, Vector3 } from "@babylonjs/core";
 import { Game } from "./Game";
-import { HemisphericLight } from "babylonjs/Lights/hemisphericLight";
-import { Vector3 } from "babylonjs/Maths/math.vector";
-import { Mesh } from "babylonjs/Meshes/mesh";
-
 
 export class Arena {
     game: Game;

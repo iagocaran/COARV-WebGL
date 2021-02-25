@@ -1,6 +1,6 @@
-import { Engine, Scene, Color4 } from 'babylonjs';
-import {Player} from "./Player";
-import {Arena} from "./Arena";
+import { Color4, Engine, Scene } from "@babylonjs/core";
+import { Player } from "./Player";
+import { Arena } from "./Arena";
 
 export class Game {
     canvas : HTMLCanvasElement;
