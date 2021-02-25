@@ -1,5 +1,6 @@
 import { Engine, Scene, Color4 } from 'babylonjs';
 import {Player} from "./Player";
+import {Arena} from "./Arena";
 
 export class Game {
     canvas : HTMLCanvasElement;
@@ -11,7 +12,9 @@ export class Game {
         this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
         this.engine = new Engine(this.canvas, true);
         this.scene = Game._initScene(this.engine);
+
         this.player = new Player(this, this.canvas);
+        let arena = new Arena(this);
 
         this.engine.runRenderLoop(() => {
             this.scene.render();
