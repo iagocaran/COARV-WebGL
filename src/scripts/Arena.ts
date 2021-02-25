@@ -19,8 +19,7 @@ export class Arena {
         materialGround.diffuseTexture = brickTexture;
 
         let materialWall = new StandardMaterial("wallTexture", scene);
-        let woodTexture = new Texture(Wood, scene);
-        materialWall.diffuseTexture = woodTexture;
+        materialWall.diffuseTexture = new Texture(Wood, scene);
 
         let ground = Mesh.CreateGround("ground1", 20, 20, 2, scene);
         ground.scaling = new Vector3(2, 10, 3);
