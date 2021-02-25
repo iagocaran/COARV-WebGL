@@ -1,4 +1,13 @@
-import { HemisphericLight, Mesh, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
+import {
+    Color3,
+    DirectionalLight,
+    HemisphericLight,
+    Mesh,
+    PointLight, SpotLight,
+    StandardMaterial,
+    Texture,
+    Vector3
+} from "@babylonjs/core";
 import { Game } from "./Game";
 import Brick from '@/images/brick.jpg';
 import Wood from '@/images/wood.jpg';
@@ -11,6 +20,23 @@ export class Arena {
         let scene = game.scene;
 
         let light = new HemisphericLight("light1", new Vector3(0, 1, 0), scene);
+        light.diffuse = new Color3(1, 1, 1);
+        light.specular = new Color3(1, 1, 1);
+        /*
+        let light1 = new DirectionalLight("dir1", new Vector3(0, -1, 0), scene);
+        light1.diffuse = new Color3(1, 1, 1);
+        light1.specular = new Color3(1, 1, 1);
+         */
+        /*
+        let light2 = new PointLight("omni1", new Vector3(1, 10, 1), scene);
+        light2.diffuse = new Color3(1, 1, 1);
+        light2.specular = new Color3(1, 1, 1);
+         */
+        /*
+        let light3 = new SpotLight("spot1", new Vector3(1, 10, 1), new Vector3(0, -1, 0), 0.8, 2, scene);
+        light3.diffuse = new Color3(1, 1, 1);
+        light3.specular = new Color3(1, 1, 1);
+         */
 
         let materialGround = new StandardMaterial("groundTexture", scene);
         let brickTexture = new Texture(Brick, scene);
