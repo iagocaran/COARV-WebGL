@@ -35,6 +35,7 @@ export class Arena {
         boxArena.material = materialGround;
         boxArena.position.y = 50 * 0.3;
         boxArena.scaling = new Vector3(3.5, 0.3, 0.8);
+        boxArena.checkCollisions = true;
 
         let columns: Array<Array<Mesh>> = [];
         let nColumns = 6;
@@ -46,12 +47,14 @@ export class Arena {
                 let mainCylinder = Mesh.CreateCylinder(`cy10-${i}`, 30, 5, 5, 20, 4, scene);
                 mainCylinder.position = new Vector3(- sizeArena / 2, 30 / 2, - 20 + (40 * i));
                 mainCylinder.material = materialWall;
+                mainCylinder.checkCollisions = true;
                 columns[i].push(mainCylinder);
 
                 if (nColumns > 1) {
                     for (let j = 1; j <= nColumns - 1; j++) {
                         let newCyl = columns[i][0].clone(`cy1${j}-${i}`);
                         newCyl.position = new Vector3(- (sizeArena / 2) + (ratio * j), 30 / 2, columns[i][0].position.z);
+                        newCyl.checkCollisions = true;
                         columns[i].push(newCyl);
                     }
                 }

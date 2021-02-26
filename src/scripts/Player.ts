@@ -1,4 +1,4 @@
-import {Angle, FreeCamera, Scene, TargetCamera, Vector3} from "@babylonjs/core";
+import {Angle, FreeCamera, Mesh, Scene, TargetCamera, Vector3} from "@babylonjs/core";
 import { Game } from "./Game";
 import { CameraControl } from "./CameraControl";
 import {Weapons} from "./Weapons";
@@ -14,12 +14,29 @@ export class Player {
     rotEngaged : boolean = false;
     weapons : Weapons;
     weaponShoot : boolean = false;
+    playerBox : Mesh;
 
     constructor(game : Game, canvas : HTMLCanvasElement) {
         this.scene = game.scene;
         this.isAlive = true;
         this.camera = this._initCamera(this.scene, canvas);
         this.weapons = new Weapons(this);
+
+        this.playerBox = Mesh.CreateBox("headMainPlayer", 3, this.scene);
+        this.playerBox.position = new Vector3(-20, 5, 0);
+        this.playerBox.ellipsoid = new Vector3(2, 2, 2);
+        this.camera.parent = this.playerBox;
+        this.playerBox.checkCollisions = true;
+        // this.playerBox.applyGravity = true;
+        // this.camera.isMain = true;
+        (<FreeCamera>this.camera).applyGravity = true;
+
+        let hitBoxPlayer = Mesh.CreateBox("hitBoxPlayer", 3, this.scene);
+        hitBoxPlayer.parent = this.playerBox;
+        hitBoxPlayer.scaling.y = 2;
+        hitBoxPlayer.isPickable = true;
+        //hitBoxPlayer.isMain = true;
+
         this._initPointerLock();
         this._initMouseHandle();
     }
@@ -32,6 +49,7 @@ export class Player {
         this.control = new CameraControl(camera);
         camera.inputs.add(this.control);
         camera.attachControl(false);
+
         return camera;
     }
 

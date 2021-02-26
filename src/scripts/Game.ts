@@ -1,4 +1,4 @@
-import { Color4, Engine, Scene } from "@babylonjs/core";
+import {Color4, Engine, Scene, Vector3} from "@babylonjs/core";
 import { Player } from "./Player";
 import { Arena } from "./Arena";
 
@@ -34,6 +34,8 @@ export class Game {
     private static _initScene (engine : Engine) : Scene {
         let scene = new Scene(engine);
         scene.clearColor = new Color4(0, 0, 0, 255);
+        scene.gravity = new Vector3(0, -9.81, 0);
+        scene.collisionsEnabled = true;
         return scene;
     }
 }
