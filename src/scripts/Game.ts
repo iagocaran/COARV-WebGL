@@ -7,6 +7,7 @@ export class Game {
     engine : Engine;
     scene : Scene;
     player : Player;
+    fps : number = 1;
 
     constructor(canvasId : string) {
         this.canvas = document.getElementById(canvasId) as HTMLCanvasElement;
@@ -17,6 +18,8 @@ export class Game {
         let arena = new Arena(this);
 
         this.engine.runRenderLoop(() => {
+            this.fps = Math.round(1000 / this.engine.getDeltaTime());
+            this.player.checkMove(this.fps / 60);
             this.scene.render();
         });
 
