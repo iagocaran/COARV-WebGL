@@ -91,6 +91,22 @@ export class Weapons {
             let meshFound = newRocket.getScene().pickWithRay(rayRocket);
 
             if (!meshFound || meshFound.distance < 10) {
+                if (meshFound?.pickedMesh) {
+                    let explosionRadius = Mesh.CreateSphere("sphere", 5.0, 20, this.player.scene);
+                    explosionRadius.position = <Vector3>meshFound.pickedPoint;
+                    explosionRadius.isPickable = false;
+
+                    explosionRadius.material = new StandardMaterial("textureExplosion", this.player.scene);
+                    (<StandardMaterial>explosionRadius.material).diffuseColor = new Color3(1, 0.6, 0);
+                    (<StandardMaterial>explosionRadius.material).specularColor = new Color3(0, 0, 0);
+                    (<StandardMaterial>explosionRadius.material).alpha = 0.8;
+
+                    explosionRadius.registerAfterRender(() => {
+                        (<StandardMaterial>explosionRadius.material).alpha -= 0.02;
+                        if ((<StandardMaterial>explosionRadius.material).alpha <= 0)
+                            explosionRadius.dispose();
+                    });
+                }
                 newRocket.dispose();
             }
         });
