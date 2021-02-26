@@ -1,6 +1,6 @@
-import {FreeCamera, ICameraInput, Vector3} from "@babylonjs/core";
+import {Angle, FreeCamera, ICameraInput, Vector3} from "@babylonjs/core";
 
-export class CameraKeyboardControl implements ICameraInput<FreeCamera> {
+export class CameraControl implements ICameraInput<FreeCamera> {
     camera : FreeCamera;
     keysLeft : Array<string> = ['ArrowLeft', 'a'];
     keysRight : Array<string> = ['ArrowRight', 'd'];
@@ -9,9 +9,11 @@ export class CameraKeyboardControl implements ICameraInput<FreeCamera> {
     keys : Array<string> = [];
     noPreventDefault : boolean = false;
     sensibility : number = -0.0015;
+    angularSensibility : number = -50;
     speed : number = 0.5;
     onKeyDown : any;
     onKeyUp : any;
+    onMouseMove : any;
     front : Vector3 = new Vector3(0, 1, 0);
     up : Vector3 = new Vector3(0, 0, 1);
 
@@ -40,7 +42,7 @@ export class CameraKeyboardControl implements ICameraInput<FreeCamera> {
                 if (index === -1) this.keys.push(event.key);
                 if (!this.noPreventDefault) event.preventDefault();
             }
-        }
+        };
         this.onKeyUp = (event : KeyboardEvent) => {
             if (this.keysLeft.indexOf(event.key) !== -1 ||
                 this.keysRight.indexOf(event.key) !== -1 ||
@@ -50,10 +52,20 @@ export class CameraKeyboardControl implements ICameraInput<FreeCamera> {
                 if (index >= 0) this.keys.splice(index, 1);
                 if (!this.noPreventDefault) event.preventDefault();
             }
-        }
+        };
+        this.onMouseMove = (event : MouseEvent) => {
+            // TODO Use Vector3.Lerp and move code to the checkInputs
+            // TODO Tune sensitivity
+            this.camera.cameraRotation.y += event.movementX * 0.001 * (this.angularSensibility / 250);
+            let nextRotationX = this.camera.cameraRotation.x + (event.movementY * 0.001 * (this.angularSensibility / 250));
+            if (nextRotationX < Angle.FromDegrees(90).radians()) {
+                this.camera.cameraRotation.x += event.movementY * 0.001 * (this.angularSensibility / 250);
+            }
+        };
 
         element?.addEventListener("keydown", this.onKeyDown, false);
         element?.addEventListener("keyup", this.onKeyUp, false);
+        element?.addEventListener("mousemove", this.onMouseMove, false);
         console.log(this.keysLeft);
     }
 
@@ -62,6 +74,7 @@ export class CameraKeyboardControl implements ICameraInput<FreeCamera> {
         let element = engine.getInputElement();
         element?.removeEventListener("keydown", this.onKeyDown);
         element?.removeEventListener("keyup", this.onKeyUp);
+        element?.removeEventListener("mousemove", this.onMouseMove);
         this.keys = [];
     }
 

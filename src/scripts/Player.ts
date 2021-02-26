@@ -1,6 +1,6 @@
 import { Camera, FreeCamera, Scene, Vector3} from "@babylonjs/core";
 import { Game } from "./Game";
-import { CameraKeyboardControl } from "./CameraKeyboardControl";
+import { CameraControl } from "./CameraControl";
 
 
 export class Player {
@@ -19,7 +19,7 @@ export class Player {
         camera.setTarget(Vector3.Zero());
         camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
         camera.inputs.removeByType("FreeCameraMouseInput");
-        camera.inputs.add(new CameraKeyboardControl(camera));
+        camera.inputs.add(new CameraControl(camera));
         camera.attachControl(false);
         return camera;
     }
