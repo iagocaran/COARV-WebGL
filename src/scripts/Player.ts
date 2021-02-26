@@ -1,6 +1,7 @@
 import {Angle, FreeCamera, Scene, TargetCamera, Vector3} from "@babylonjs/core";
 import { Game } from "./Game";
 import { CameraControl } from "./CameraControl";
+import {Weapons} from "./Weapons";
 
 
 export class Player {
@@ -11,12 +12,16 @@ export class Player {
     isAlive : boolean;
     controlEnabled : boolean = false;
     rotEngaged : boolean = false;
+    weapons : Weapons;
+    weaponShoot : boolean = false;
 
     constructor(game : Game, canvas : HTMLCanvasElement) {
         this.scene = game.scene;
         this.isAlive = true;
         this.camera = this._initCamera(this.scene, canvas);
+        this.weapons = new Weapons(this);
         this._initPointerLock();
+        this._initMouseHandle();
     }
 
     private _initCamera(scene : Scene, canvas : HTMLCanvasElement) : TargetCamera {
@@ -45,6 +50,31 @@ export class Player {
         };
 
         document.addEventListener("pointerlockchange", pointerLockChange, false);
+    }
+
+    private _initMouseHandle() {
+        let canvas = this.scene.getEngine().getRenderingCanvas();
+
+        canvas?.addEventListener("pointerdown", (event) => {
+            if (this.controlEnabled && !this.weaponShoot) {
+                this.weaponShoot = true;
+                this.handleUserMouseDown();
+            }
+        }, false);
+        canvas?.addEventListener("pointerup", (event) => {
+            if (this.controlEnabled && this.weaponShoot) {
+                this.weaponShoot = false;
+                this.handleUserMouseUp();
+            }
+        }, false);
+    }
+
+    handleUserMouseDown() {
+        if (this.isAlive) this.weapons.fire();
+    }
+
+    handleUserMouseUp() {
+        if (this.isAlive) this.weapons.stopFire();
     }
 
     checkMove(fpsRatio : number) {
