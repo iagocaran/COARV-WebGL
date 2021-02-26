@@ -46,4 +46,4 @@ npm run dev
 
 ## Credits
 
-* [Victor Mallet](https://openclassrooms.com/fr/courses/3979376-creez-votre-propre-fps-en-webgl) for his WebGL tutorial in openclassrooms.
+* Victor Mallet for his [WebGL tutorial in openclassrooms](https://openclassrooms.com/fr/courses/3979376-creez-votre-propre-fps-en-webgl).
