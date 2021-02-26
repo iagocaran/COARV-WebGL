@@ -1,5 +1,5 @@
 import {Player} from "./Player";
-import {Color3, Engine, Mesh, StandardMaterial, Vector3} from "@babylonjs/core";
+import {Color3, Engine, Mesh, Ray, StandardMaterial, TargetCamera, Vector3} from "@babylonjs/core";
 
 export class Weapons {
     bottomPosition : Vector3 = new Vector3(0.5, -2.5, 1);
@@ -10,10 +10,12 @@ export class Weapons {
     launchBullets : boolean = false;
     engine : Engine;
     rocketLauncher : Mesh;
+    player : Player;
 
     constructor(player : Player) {
         this.rocketLauncher = this.newWeapon(player);
         this.engine = player.scene.getEngine();
+        this.player = player;
 
         player.scene.registerBeforeRender(() => {
             if (!this.canFire) {
@@ -51,8 +53,46 @@ export class Weapons {
 
     launchFire() {
         if (this.canFire) {
-            console.log('Pew !');
+            let renderWidth = this.player.camera.getEngine().getRenderWidth(true);
+            let renderHeight = this.player.camera.getEngine().getRenderHeight(true);
+
+            let direction = this.player.scene.pick(renderWidth / 2, renderHeight / 2)?.pickedPoint?.subtractInPlace(this.player.camera.position).normalize();
+
+            this.createRocket(this.player.camera, direction);
             this.canFire = false;
         }
+    }
+
+    createRocket(playerPosition : TargetCamera, direction? : Vector3) {
+        let positionValue = this.rocketLauncher.absolutePosition.clone();
+        let rotationValue = playerPosition.rotation;
+        let newRocket = Mesh.CreateBox("rocket", 1, this.player.scene);
+        let rocketDirection = new Vector3(
+            Math.sin(rotationValue.y) * Math.cos(rotationValue.x),
+            Math.sin(-rotationValue.x),
+            Math.cos(rotationValue.y) * Math.cos(rotationValue.x)
+        );
+        newRocket.position = new Vector3(
+            positionValue.x + rocketDirection.x,
+            positionValue.y + rocketDirection.y,
+            positionValue.z + rocketDirection.z,
+        );
+        newRocket.rotation = new Vector3(rotationValue.x, rotationValue.y, rotationValue.z);
+        newRocket.scaling = new Vector3(0.5, 0.5, 1);
+        newRocket.isPickable = false;
+
+        let rocketMaterial = new StandardMaterial("textureWeapon", this.player.scene);
+        rocketMaterial.diffuseColor = new Color3(1, 0, 0);
+        newRocket.material = rocketMaterial;
+
+        newRocket.registerAfterRender(() => {
+            newRocket.translate(new Vector3(0, 0, 1), 1, 0);
+            let rayRocket = new Ray(newRocket.position, rocketDirection);
+            let meshFound = newRocket.getScene().pickWithRay(rayRocket);
+
+            if (!meshFound || meshFound.distance < 10) {
+                newRocket.dispose();
+            }
+        });
     }
 }
