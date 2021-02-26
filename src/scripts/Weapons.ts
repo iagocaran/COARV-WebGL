@@ -53,17 +53,12 @@ export class Weapons {
 
     launchFire() {
         if (this.canFire) {
-            let renderWidth = this.player.camera.getEngine().getRenderWidth(true);
-            let renderHeight = this.player.camera.getEngine().getRenderHeight(true);
-
-            let direction = this.player.scene.pick(renderWidth / 2, renderHeight / 2)?.pickedPoint?.subtractInPlace(this.player.camera.position).normalize();
-
-            this.createRocket(this.player.camera, direction);
+            this.createRocket(this.player.playerBox);
             this.canFire = false;
         }
     }
 
-    createRocket(playerPosition : TargetCamera, direction? : Vector3) {
+    createRocket(playerPosition : Mesh) {
         let positionValue = this.rocketLauncher.absolutePosition.clone();
         let rotationValue = playerPosition.rotation;
         let newRocket = Mesh.CreateBox("rocket", 1, this.player.scene);

@@ -19,10 +19,11 @@ export class Player {
     constructor(game : Game, canvas : HTMLCanvasElement) {
         this.scene = game.scene;
         this.isAlive = true;
+
+        this.playerBox = Mesh.CreateBox("headMainPlayer", 3, this.scene);
         this.camera = this._initCamera(this.scene, canvas);
         this.weapons = new Weapons(this);
 
-        this.playerBox = Mesh.CreateBox("headMainPlayer", 3, this.scene);
         this.playerBox.position = new Vector3(-20, 5, 0);
         this.playerBox.ellipsoid = new Vector3(2, 2, 2);
         this.camera.parent = this.playerBox;
@@ -46,7 +47,7 @@ export class Player {
         camera.setTarget(Vector3.Zero());
         camera.inputs.removeByType("FreeCameraKeyboardMoveInput");
         camera.inputs.removeByType("FreeCameraMouseInput");
-        this.control = new CameraControl(camera);
+        this.control = new CameraControl(camera, this.playerBox);
         camera.inputs.add(this.control);
         camera.attachControl(false);
 
@@ -102,33 +103,38 @@ export class Player {
             for (let i = 0; i < control.keys.length; i++) {
                 let key = control.keys[i];
                 if (control.keysUp.indexOf(key) !== -1) {
-                    this.camera.position = new Vector3(
-                        this.camera.position.x + (Math.sin(this.camera.rotation.y) * relativeSpeed),
-                        this.camera.position.y,
-                        this.camera.position.z + (Math.cos(this.camera.rotation.y) * relativeSpeed)
+                    let forward = new Vector3(
+                        this.playerBox.position.x + (Math.sin(this.playerBox.rotation.y) * relativeSpeed),
+                        this.playerBox.position.y,
+                        this.playerBox.position.z + (Math.cos(this.playerBox.rotation.y) * relativeSpeed)
                     );
+                    this.playerBox.moveWithCollisions(forward);
                 }
                 if (control.keysDown.indexOf(key) !== -1) {
-                    this.camera.position = new Vector3(
-                        this.camera.position.x + (Math.sin(this.camera.rotation.y) * -relativeSpeed),
-                        this.camera.position.y,
-                        this.camera.position.z + (Math.cos(this.camera.rotation.y) * -relativeSpeed)
+                    let backward = new Vector3(
+                        this.playerBox.position.x + (Math.sin(this.playerBox.rotation.y) * -relativeSpeed),
+                        this.playerBox.position.y,
+                        this.playerBox.position.z + (Math.cos(this.playerBox.rotation.y) * -relativeSpeed)
                     );
+                    this.playerBox.moveWithCollisions(backward);
                 }
                 if (control.keysLeft.indexOf(key) !== -1) {
-                    this.camera.position = new Vector3(
-                        this.camera.position.x + Math.sin(this.camera.rotation.y + Angle.FromDegrees(-90).radians()) * relativeSpeed,
-                        this.camera.position.y,
-                        this.camera.position.z + Math.cos(this.camera.rotation.y + Angle.FromDegrees(-90).radians()) * relativeSpeed
+                    let left = new Vector3(
+                        this.playerBox.position.x + Math.sin(this.playerBox.rotation.y + Angle.FromDegrees(-90).radians()) * relativeSpeed,
+                        this.playerBox.position.y,
+                        this.playerBox.position.z + Math.cos(this.playerBox.rotation.y + Angle.FromDegrees(-90).radians()) * relativeSpeed
                     );
+                    this.playerBox.moveWithCollisions(left);
                 }
                 if (control.keysRight.indexOf(key) !== -1) {
-                    this.camera.position = new Vector3(
-                        this.camera.position.x + Math.sin(this.camera.rotation.y + Angle.FromDegrees(-90).radians()) * -relativeSpeed,
-                        this.camera.position.y,
-                        this.camera.position.z + Math.cos(this.camera.rotation.y + Angle.FromDegrees(-90).radians()) * -relativeSpeed
+                    let right = new Vector3(
+                        this.playerBox.position.x + Math.sin(this.playerBox.rotation.y + Angle.FromDegrees(-90).radians()) * -relativeSpeed,
+                        this.playerBox.position.y,
+                        this.playerBox.position.z + Math.cos(this.playerBox.rotation.y + Angle.FromDegrees(-90).radians()) * -relativeSpeed
                     );
+                    this.playerBox.moveWithCollisions(right);
                 }
+                this.playerBox.moveWithCollisions(new Vector3(0, (-1.5) * relativeSpeed, 0));
             }
         }
     }

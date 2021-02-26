@@ -1,7 +1,8 @@
-import {Angle, FreeCamera, ICameraInput, Vector3} from "@babylonjs/core";
+import {Angle, FreeCamera, ICameraInput, Mesh, Vector3} from "@babylonjs/core";
 
 export class CameraControl implements ICameraInput<FreeCamera> {
     camera : FreeCamera;
+    playerBox : Mesh;
     keysLeft : Array<string> = ['ArrowLeft', 'a'];
     keysRight : Array<string> = ['ArrowRight', 'd'];
     keysUp : Array<string> = ['ArrowUp', 'w'];
@@ -13,8 +14,9 @@ export class CameraControl implements ICameraInput<FreeCamera> {
     onKeyUp : any;
     onMouseMove : any;
 
-    constructor(camera : FreeCamera) {
+    constructor(camera : FreeCamera, playerBox : Mesh) {
         this.camera = camera;
+        this.playerBox = playerBox;
     }
 
     getClassName() {
@@ -51,10 +53,11 @@ export class CameraControl implements ICameraInput<FreeCamera> {
         };
         this.onMouseMove = (event : MouseEvent) => {
             // TODO Tune sensitivity
-            this.camera.cameraRotation.y += event.movementX * 0.001 * (this.angularSensibility / 250);
-            let nextRotationX = this.camera.cameraRotation.x + (event.movementY * 0.001 * (this.angularSensibility / 250));
+            // if (this.rotEngaged)
+            this.playerBox.rotation.y += event.movementX * 0.001 * (this.angularSensibility / 250);
+            let nextRotationX = this.playerBox.rotation.x + (event.movementY * 0.001 * (this.angularSensibility / 250));
             if (nextRotationX < Angle.FromDegrees(90).radians()) {
-                this.camera.cameraRotation.x += event.movementY * 0.001 * (this.angularSensibility / 250);
+                this.playerBox.rotation.x += event.movementY * 0.001 * (this.angularSensibility / 250);
             }
         };
 
