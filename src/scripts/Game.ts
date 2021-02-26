@@ -21,6 +21,9 @@ export class Game {
             this.fps = Math.round(1000 / this.engine.getDeltaTime());
             this.player.checkMove(this.fps / 60);
             this.scene.render();
+
+            if (this.player.weapons.launchBullets)
+                this.player.weapons.launchFire();
         });
 
         window.addEventListener("resize", () => {
