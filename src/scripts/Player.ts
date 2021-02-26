@@ -7,11 +7,14 @@ export class Player {
     scene : Scene;
     camera : Camera;
     isAlive : boolean;
+    controlEnabled : boolean = false;
+    rotEngaged : boolean = false;
 
     constructor(game : Game, canvas : HTMLCanvasElement) {
         this.scene = game.scene;
         this.isAlive = true;
         this.camera = this._initCamera(this.scene, canvas);
+        this._initPointerLock();
     }
 
     private _initCamera(scene : Scene, canvas : HTMLCanvasElement) : Camera {
@@ -22,5 +25,22 @@ export class Player {
         camera.inputs.add(new CameraControl(camera));
         camera.attachControl(false);
         return camera;
+    }
+
+    private _initPointerLock() {
+        let canvas = this.scene.getEngine().getRenderingCanvas();
+
+        canvas?.addEventListener("click", (event) => {
+            if (canvas) {
+                canvas.requestPointerLock();
+            }
+        }, false);
+
+        let pointerLockChange = (event : any) => {
+            this.controlEnabled = (document.pointerLockElement === canvas);
+            this.rotEngaged = this.controlEnabled;
+        };
+
+        document.addEventListener("pointerlockchange", pointerLockChange, false);
     }
 }
