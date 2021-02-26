@@ -1,4 +1,13 @@
-import { HemisphericLight, Mesh, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
+import {
+    Color3,
+    HemisphericLight,
+    Mesh,
+    PointLight,
+    ShadowGenerator,
+    StandardMaterial,
+    Texture,
+    Vector3
+} from "@babylonjs/core";
 import { Game } from "./Game";
 import Tile from '@/images/tile.jpg';
 
@@ -10,8 +19,19 @@ export class Arena {
         let scene = game.scene;
 
         let light = new HemisphericLight("light1", new Vector3(0, 10, 0), scene);
+        light.intensity = 0.2;
+
         let light2 = new HemisphericLight("light2", new Vector3(0, -1, 0), scene);
+        light2.specular = new Color3(0, 0, 0);
         light2.intensity = 0.8;
+
+        let light3 = new PointLight("spot0", new Vector3(-40, 10, -100), scene);
+        light3.intensity = 0.3;
+        light3.specular = new Color3(0, 0, 0);
+
+        let shadowGenerator = new ShadowGenerator(2048, light3);
+        shadowGenerator.usePoissonSampling = true;
+        shadowGenerator.bias = 0.0005;
 
         let materialGround = new StandardMaterial("groundTexture", scene);
         let tileTexture = new Texture(Tile, scene);
@@ -27,6 +47,7 @@ export class Arena {
         boxArena.position.y = 50 * 0.3;
         boxArena.scaling = new Vector3(3.5, 0.3, 0.8);
         boxArena.checkCollisions = true;
+        boxArena.receiveShadows = true;
 
         let columns: Array<Array<Mesh>> = [];
         let nColumns = 6;
@@ -39,6 +60,11 @@ export class Arena {
                 mainCylinder.position = new Vector3(- sizeArena / 2, 30 / 2, - 20 + (40 * i));
                 mainCylinder.material = materialWall;
                 mainCylinder.checkCollisions = true;
+
+                //mainCylinder.maxSimultaneousLights = 10;
+                shadowGenerator.getShadowMap()?.renderList?.push(mainCylinder);
+                mainCylinder.receiveShadows = true;
+
                 columns[i].push(mainCylinder);
 
                 if (nColumns > 1) {
@@ -46,6 +72,10 @@ export class Arena {
                         let newCyl = columns[i][0].clone(`cy1${j}-${i}`);
                         newCyl.position = new Vector3(- (sizeArena / 2) + (ratio * j), 30 / 2, columns[i][0].position.z);
                         newCyl.checkCollisions = true;
+
+                        shadowGenerator.getShadowMap()?.renderList?.push(newCyl);
+                        newCyl.receiveShadows = true;
+
                         columns[i].push(newCyl);
                     }
                 }
