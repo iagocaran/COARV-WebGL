@@ -1,4 +1,4 @@
-import {Color4, Engine, Scene, Vector3} from "@babylonjs/core";
+import { Color4, Engine, Scene, Vector3 } from "@babylonjs/core";
 import { Player } from "./Player";
 import { Arena } from "./Arena";
 

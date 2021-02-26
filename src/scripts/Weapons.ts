@@ -1,5 +1,5 @@
-import {Player} from "./Player";
-import {Color3, Engine, Mesh, Ray, StandardMaterial, TargetCamera, Vector3} from "@babylonjs/core";
+import { Player } from "./Player";
+import { Color3, Engine, Mesh, Ray, StandardMaterial, Vector3 } from "@babylonjs/core";
 
 export class Weapons {
     bottomPosition : Vector3 = new Vector3(0.5, -2.5, 1);

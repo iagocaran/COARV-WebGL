@@ -1,13 +1,4 @@
-import {
-    Color3,
-    DirectionalLight,
-    HemisphericLight,
-    Mesh,
-    PointLight, SpotLight,
-    StandardMaterial,
-    Texture,
-    Vector3
-} from "@babylonjs/core";
+import { HemisphericLight, Mesh, StandardMaterial, Texture, Vector3 } from "@babylonjs/core";
 import { Game } from "./Game";
 import Tile from '@/images/tile.jpg';
 

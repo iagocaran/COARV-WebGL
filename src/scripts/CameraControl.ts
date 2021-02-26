@@ -1,4 +1,4 @@
-import {Angle, FreeCamera, ICameraInput, Mesh, Vector3} from "@babylonjs/core";
+import { Angle, FreeCamera, ICameraInput, Mesh } from "@babylonjs/core";
 
 export class CameraControl implements ICameraInput<FreeCamera> {
     camera : FreeCamera;

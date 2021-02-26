@@ -1,7 +1,7 @@
-import {Angle, FreeCamera, Mesh, Scene, TargetCamera, Vector3} from "@babylonjs/core";
+import { Angle, FreeCamera, Mesh, Scene, TargetCamera, Vector3 } from "@babylonjs/core";
 import { Game } from "./Game";
 import { CameraControl } from "./CameraControl";
-import {Weapons} from "./Weapons";
+import  {Weapons } from "./Weapons";
 
 
 export class Player {
